@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import { View, Text, TouchableHighlight, ScrollView, Linking, Clipboard } from "react-native";
+import { View, Text, TouchableHighlight, ScrollView, Linking, Clipboard, TouchableOpacity } from "react-native";
 import { basicStyles, basicCompStyles } from "../../common/styles/styleSheet";
 import QRCodeScanner from 'react-native-qrcode-scanner';
 
@@ -23,7 +23,7 @@ export default class Scanner extends PureComponent {
 
     copyToClipBoard = () => {
         Clipboard.setString(this.state.code.data);
-        this.setState({code : null, copied: true});
+        this.setState({copied: true});
     }
 
     renderScanner = () => {
@@ -51,11 +51,11 @@ export default class Scanner extends PureComponent {
                     </View>
                     <View style={[basicCompStyles.padding10, basicCompStyles.fullSize]}>
                         <ScrollView style={basicCompStyles.fullSize}>
-                            <TouchableHighlight onPress={this.copyToClipBoard}>
+                            <TouchableOpacity onPress={this.copyToClipBoard}>
                                 <Text style={basicStyles.mediumTextDark}>{this.state.code.data}</Text>
-                            </TouchableHighlight>
+                            </TouchableOpacity>
                         </ScrollView>
-                        {this.renderCopied()}
+                        {this.state.copied && <Text style={[basicStyles.smallTextRed, {padding: 5}]}>Copied to Clipboard!</Text>}
                     </View>
                     <TouchableHighlight style={basicStyles.curvedView} onPress={this.tryAnother}>
                         <Text style={basicStyles.mediumTextLight}>Try another</Text>
@@ -64,12 +64,6 @@ export default class Scanner extends PureComponent {
             </View>
         } else {
             return this.renderScanner();
-        }
-    }
-
-    renderCopied = () => {
-        if(this.state.copied) {
-            <Text style={[basicStyles.smallTextRed, {padding: 5}]}>Copied to Clipboard!</Text>
         }
     }
 
